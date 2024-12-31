@@ -1,0 +1,14 @@
+FUNÇÕES DE TEXTO
+
+  LOWER(character_expression)
+  -> Converte todo o texto em minusculo
+
+  UPPER(character_expression)
+  -> Converte todo o texto em maiusculo
+
+  LOWER(string_value1, string_value2, string_valueN)
+  -> Combina vários textos
+
+  REPLACE(string_expression, string_pattern, string_replacement)
+  -> Substitui parte de um texto por outro
+  
