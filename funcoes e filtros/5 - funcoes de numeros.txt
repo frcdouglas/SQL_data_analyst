@@ -1,0 +1,12 @@
+FUNÇÕES DE NÚMEROS:
+
+  CEILING(numeric_expression)
+  -> Arredonda para o numero inteiro superior mais proximo
+  FLOOR(numeric_expression)
+  -> Arredonda para o numero inteiro inferior mais proximo
+  ROUND(numeric_expression, lenght [function])
+  -> Arredonda para o numero de casas decimais mais proximo fornecido (lenght)
+  ISNULL(check_expression, replacement_value)
+  -> Detecta valores nulos na coluna e substitui por um outro valor
+  CAST(expression AS data_type[(lenght)])
+  -> Transforma um dado em outro tipo de dado
