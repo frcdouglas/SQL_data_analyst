@@ -1,5 +1,31 @@
 CASE DO MODULO DE FUNÇÕES E FILTROS
 
-Query calculando total faruado por mes com filtro de data fornecido pelo usuario
+--> Query calculando total faruado por mes com filtro de data fornecido pelo usuario
+
+select 
+    sum(Subtotal),
+    month(Created_At) as Mes,
+    year(Created_At) as Ano
+from ORDERS
+
+where {{Created_At}} -- Filtro de data do usuario
+
+group by Ano, Mes
+order by Ano, Mes
+
+-- realiza a soma total agrupada por mes e ano do pedido.
+
+
 
 Query calculando total de novos clientes por dia no mes fornecido pelo usuario
+
+select 
+    count(ID),
+    cast(Created_At as date) as Data -- Retira as horas do campo data para poder agrupar corretamente por dia
+from PEOPLE
+
+where {{Created_At}}
+
+group by Data
+order by Data
+
