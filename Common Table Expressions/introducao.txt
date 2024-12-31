@@ -1,0 +1,139 @@
+O que são CTEs?
+
+CTEs ou Common Table Expressions são subconsultas nomeadas que existem temporariamente durante a execução de uma consulta SQL.
+
+As CTEs são definidas na cláusula WITH e consistem em um nome e uma query. O resultado desta query pode ser referenciada várias vezes na consulta principal, funcionando como uma "tabela temporária" apenas durante a execução da query.
+
+A sintaxe básica de uma CTE é:
+
+WITH nome_cte (coluna1, coluna2) AS (
+SELECT coluna1, coluna2
+FROM tabela
+)
+SELECT *
+FROM nome_cte
+
+Onde:
+nome_cte: é o nome dado para esta CTE
+(coluna1, coluna2): são as colunas definidas para a CTE, opcional
+SELECT coluna1, coluna2: é a query que irá popular a CTE
+
+
+Reduzindo o peso das análises de dados
+
+Um dos principais casos de uso de CTEs é para reduzir o peso e complexidade de análises de dados em bancos de dados grandes e complexos.
+Isso porque ao juntar muitas tabelas ou não aplicar filtros adequadamente, nossas queries podem rapidamente atingir centenas de milhões de linhas, consumindo muitos recursos do servidor de banco de dados e deixando as análises muito lentas.
+Por exemplo, em um banco de dados com tabelas de produtos, pedidos e avaliações:
+
+Cada produto tem em média 100 pedidos relacionados
+Cada produto tem em média 50 avaliações
+Ao juntar essas 3 tabelas, já teríamos uma query com 5000 linhas
+Considerando que temos 24 colunas, isso totalizaria 120 mil células de dados
+
+E isso em um banco pequeno. Em bancos de dados maiores, rapidamente atingiríamos queries com centenas de milhões de linhas, extremamente pesadas e caras para processar.
+Uma forma de contornar isso é utilizando CTEs para filtrar e resumir os dados antes de fazer as junções entre tabelas. Por exemplo:
+
+WITH pedidos_2020 AS (
+SELECT *
+FROM pedidos
+WHERE data BETWEEN '2020-01-01' AND '2020-12-31'
+),
+
+avaliacoes_2020 AS (
+SELECT *
+FROM avaliacoes
+WHERE data BETWEEN '2020-01-01' AND '2020-12-31'
+)
+
+SELECT *
+FROM pedidos_2020
+INNER JOIN avaliacoes_2020
+ON pedidos_2020.produto_id = avaliacoes_2020.produto_id
+
+
+Nesse exemplo, filtramos os pedidos e avaliações apenas do ano de 2020 antes de fazer a junção entre essas tabelas.
+Dessa forma, reduzimos o volume de dados significativamente antes de unir tudo, deixando a query final muito mais leve e rápida.
+Possibilitando consultas mais complexas
+Outro grande benefício de CTEs é permitir consultas mais complexas, que envolvem muitas tabelas ou processos elaborados, e que não seriam viáveis ou gerenciáveis em queries simples.
+Por exemplo, em um cenário onde precisamos combinar dados de 20 sistemas diferentes, cada um com suas 5 ou 6 tabelas. Uma tentativa de juntar todas essas 100 tabelas em uma única query resultaria em algo extremamente complexo, sujeito a erros e difícil de dar manutenção.
+Nesse caso, podemos quebrar o processo em CTEs:
+
+WITH sistemas_a AS (
+--JOIN das tabelas do sistema A
+),
+
+sistemas_b AS (
+--JOIN das tabelas do sistema B
+),
+
+sistemas_c AS (
+--JOIN das tabelas do sistema C
+)
+
+SELECT *
+FROM sistemas_a
+INNER JOIN sistemas_b
+ON sistemas_a.id = sistemas_b.id
+INNER JOIN sistemas_c
+ON sistemas_b.id = sistemas_c.id
+
+
+Dessa forma, conseguimos dividir a complexidade em partes menores, onde fazemos junções mais simples dentro de cada sistema, para depois unir todos os dados.
+Isso facilita não apenas o desenvolvimento, mas também manutenção, troubleshooting e documentação da query final.
+Deixando as queries mais organizadas
+Ao dividir queries complexas em CTEs menores e bem definidos, também deixamos nosso código SQL muito mais organizado, o que facilita sua manutenção futura.
+Dentro de cada CTE podemos adicionar comentários explicando o seu objetivo, as junções e filtros aplicados, e quaisquer outras informações relevantes.
+
+WITH clientes_sp AS (
+-- Obtém dados de clientes apenas de São Paulo
+SELECT *
+FROM clientes
+WHERE estado = 'SP'
+),
+
+vendas_2020 AS (
+-- Obtem vendas apenas de 2020
+SELECT *
+FROM vendas
+WHERE ano = 2020
+)
+
+SELECT *
+FROM clientes_sp
+INNER JOIN vendas_2020
+-- Junta dados de clientes SP com vendas 2020
+ON clientes_sp.id = vendas_2020.cliente_id
+
+
+Ter tudo documentado dentro do próprio código SQL é muito mais simples do que tentar descrever uma query complexa de 150 linhas. Facilita que qualquer pessoa consiga rapidamente entender o objetivo e funcionamento das diversas partes.
+Análises complexas que só são possíveis com CTEs
+Por fim, algumas análises que envolvem agregações ou janelas analíticas só são possíveis de serem feitas com o uso de CTEs.
+Isso porque a etapa de agregação ou cálculo acontece após a query ser processada, então não temos como aplicar filtros baseados nessas colunas.
+Por exemplo, se quisermos filtrar os clientes com total de compras acima de um valor, não é possível fazer em uma única query:
+
+-- Errado
+SELECT cliente_id, SUM(valor) AS total_compras
+FROM vendas
+GROUP BY cliente_id
+HAVING total_compras > 1000
+
+A coluna total_compras só será calculada após a group by, então não podemos filtrar nela na mesma query.
+A solução é usar CTEs:
+
+```sql
+WITH comprasporcliente AS (
+SELECT clienteid, SUM(valor) AS totalcompras
+FROM vendas
+GROUP BY cliente_id
+
+)
+
+SELECT *
+FROM comprasporcliente
+WHERE total_compras > 1000
+```
+
+Primeiro agregamos os dados na CTE, para depois aplicar o filtro na coluna agregada.
+Esse tipo de processo que depende do resultado de agregações só é possível com o uso de CTEs ou subqueries.
+
+
