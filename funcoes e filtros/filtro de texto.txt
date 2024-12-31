@@ -1,0 +1,14 @@
+OPERADORES DE COMPARAÇÃO:
+  =
+  >
+  <
+  >=
+  <=
+  <>
+  
+OPERADORES LÓGICOS:
+  AND
+  OR
+  NOT
+  IN
+  LIKE
