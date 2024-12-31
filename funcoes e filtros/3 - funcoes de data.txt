@@ -1,0 +1,23 @@
+FUNÇÕES DE DATA:
+
+  DAY: Retorna o dia do mês de uma data.
+  MONTH: Retorna o mês de uma data.
+  YEAR: Retorna o ano de uma data.
+  DAYOFWEEK: Retorna o dia da semana como um número de 1 (Domingo) a 7 (Sábado).
+  DAYOFYEAR: Retorna o dia do ano como um número entre 1 e 366.
+
+  -> OBTENDO DATA/HORA ATUAL
+  NOW(): Retorna a data e hora atual nos formatos DATE ou DATETIME, dependendo como for utilizada.
+  CURRENT_TIMESTAMP: Similiar ao NOW() mas retorna sempre no formato DATETIME.
+
+  -> ADICIONANDO E SUBTRAINDO VALORES DE DATA
+  DATADIFF(unit, data_inicial, data_final)
+    - unit: unidade de medida para diferença: DAY, MONTH, YEAR etc.
+    - datainicial e datafinal: datas inicial e final para calcular diferença.
+  EXEMPLO:
+    SELECT
+      DATEDIFF(YEAR, data_nascimento, NOW()) AS idade_anos,
+      DATEDIFF(MONTH, data_cadastro, NOW()) AS idade_meses
+    FROM clientes;
+
+  
