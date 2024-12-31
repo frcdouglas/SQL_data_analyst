@@ -1,0 +1,1 @@
+Unindo tabela clientes e pedidos para ver quantos pedidos novos foram feitos no dia e quantos clientes novos foram cadastrados no dia.
