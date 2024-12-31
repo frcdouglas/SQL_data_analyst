@@ -1,0 +1,7 @@
+FUNÇÃO UNION
+
+Utilizada para unir tabelas de forma vertical, empilhamento de tabelas que possuam as mesmas colunas.
+
+Exemplo: Tabelas de faturamento e gastos financeiros de uma empresa. Podemos fazer a subquery nas tabelas e uni-las utilizando o union.
+
+EXEMPLO NA IMAGEM
