@@ -1,0 +1,3 @@
+Query calculando total faruado por mes com filtro de data fornecido pelo usuario
+
+Query calculando total de novos clientes por dia no mes fornecido pelo usuario
