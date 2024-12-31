@@ -1,0 +1,27 @@
+OPERADORES LOGICOS:
+  AND
+  OR
+  BETWEEN
+
+Antes de aplicar filtros em dados de data, é importante formatar as colunas corretamente.
+Caso contrário, podem ocorrer agrupamentos inesperados, pois partes como hora não teriam sido consideradas.
+
+Por exemplo:
+
+SELECT 
+  SUM(subtotal) AS faturamento,
+  CREATED_AT AS dia
+FROM ORDERS
+GROUP BY dia
+ORDER BY dia
+
+Nesse caso, a data está no formato date time, mantendo hora, minuto e segundo. Assim, dias iguais são agrupados separadamente.
+Para formatar no tipo date (apenas data), utiliza-se a função CAST:
+
+SELECT SUM(subtotal) AS faturamento,
+CAST(CREATED_AT AS DATE) AS dia
+FROM ORDERS
+GROUP BY dia
+ORDER BY dia
+
+Agora os registros são agrupados por dia, ignorando hora.
